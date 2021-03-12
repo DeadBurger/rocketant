@@ -26,12 +26,15 @@ env:
   NODE_VERSION: "10.x" # set this to the node version to use
 
 jobs:
-  build-and-deploy:
+  build:
     name: Build and Deploy
     runs-on: ubuntu-latest
     environment: production
     steps:
       - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v1
         with:
@@ -43,9 +46,17 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-      - name: "Deploy to Azure WebApp"
-        uses: azure/webapps-deploy@v2
+      - name: Share artifact inside workflow
+        uses: actions/upload-artifact@v1
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          name: react-github-actions-build
+          path: build
+    - name: Upload to blob storage
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+            az storage blob upload-batch --account-name rocketant -d '$web' -s .
+    - name: logout
+      run: |
+            az logout
