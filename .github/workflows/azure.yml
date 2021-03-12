@@ -45,6 +45,12 @@ jobs:
           azcliversion: 2.0.72
           inlineScript: |
             az storage blob upload-batch --account-name rocketant -d '$web' -s react-github-actions-build
-      - name: logout
+      - name: Purge CDN endpoint
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az cdn endpoint purge --content-paths  "/*" --profile-name "rocketant" --name "rocketant" --resource-group "rocketant"
+      - name: Logout from Azure
         run: |
           az logout
