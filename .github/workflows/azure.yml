@@ -8,7 +8,7 @@ env:
 
 jobs:
   build:
-    name: Build and Deploy
+    name: Build
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -32,12 +32,21 @@ jobs:
         with:
           name: react-github-actions-build
           path: build
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Get artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: react-github-actions-build
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            az storage blob upload-batch --account-name rocketant -d '$web' -s .
+            az storage blob upload-batch --account-name rocketant -d '$web' -s react-github-actions-build
       - name: logout
         run: |
           az logout
