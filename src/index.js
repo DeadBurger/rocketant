@@ -4,12 +4,12 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import { Provider, connect } from "react-redux";
+import { Provider } from "react-redux";
 import store from "./store";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const Count = (props) => (
+/** const Count = (props) => (
   <div>
     The count is {props.count}
     <button onClick={props.increment}>increment</button>
@@ -26,7 +26,7 @@ const mapDispatch = (dispatch) => ({
   incrementAsync: () => dispatch.count.incrementAsync(1),
 });
 
-const CountContainer = connect(mapState, mapDispatch)(Count);
+const CountContainer = connect(mapState, mapDispatch)(Count); */
 
 ReactDOM.render(
   <Provider store={store}>
