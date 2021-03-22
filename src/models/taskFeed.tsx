@@ -33,12 +33,11 @@ export const taskFeed = createModel<RootModel>()({
   },
 
   effects: (dispatch) => ({
-    async getTasksAsync(): Promise<boolean> {
+    async getTasksAsync(): Promise<void> {
       const result = await axios.get(`${API_BASE_URL}/api/tasks/latest`);
       const data = result.data as Array<Task>;
-      const uncompleteTasks = data.filter((o: Task) => !o.isCompleted);
-      dispatch.taskFeed.updateTasks(uncompleteTasks);
-      return true;
+      const uncompletedTasks = data.filter((o: Task) => !o.isCompleted);
+      dispatch.taskFeed.updateTasks(uncompletedTasks);
     },
   }),
 });

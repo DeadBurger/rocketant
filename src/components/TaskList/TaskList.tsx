@@ -12,7 +12,7 @@ export class TaskList extends React.PureComponent<Props> {
     const { tasks, getTasks } = this.props;
     return (
       <Container className="p-3">
-        <Table>
+        <Table role="table">
           <thead>
             <tr>
               <th>Description</th>
